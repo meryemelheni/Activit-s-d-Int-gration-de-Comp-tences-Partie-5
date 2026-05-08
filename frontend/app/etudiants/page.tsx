@@ -224,9 +224,12 @@ export default function EtudiantsPage() {
                     <td className="px-6 py-4 text-sm text-slate-600">{e.dateNaissance}</td>
                     <td className="px-6 py-4 text-sm text-slate-600">{e.anneePremiereInscription}</td>
                     <td className="px-6 py-4">
-                      <span className="px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-xs font-medium">
+                      <Link 
+                        href={`/departements/${e.departement?.id}`}
+                        className="px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-xs font-medium hover:bg-violet-200 transition-colors cursor-pointer"
+                      >
                         {e.departement?.nom}
-                      </span>
+                      </Link>
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
                       <button 

@@ -11,7 +11,7 @@ import static io.gatling.javaapi.http.HttpDsl.*;
 public class EtudiantSimulation extends Simulation {
 
     HttpProtocolBuilder httpProtocol = http
-            .baseUrl("http://localhost:8080")
+            .baseUrl("http://127.0.0.1:8081")
             .acceptHeader("application/json");
 
     ScenarioBuilder scn = scenario("Liste des étudiants")

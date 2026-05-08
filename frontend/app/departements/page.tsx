@@ -3,7 +3,7 @@ import Link from "next/link";
 
 async function getDepartements() {
   try {
-    const response = await fetch("http://localhost:8090/api/departements", { cache: "no-store" });
+    const response = await fetch("http://etudiant-service:8081/api/departements", { cache: "no-store" });
     if (!response.ok) return [];
     return response.json();
   } catch {
@@ -13,7 +13,7 @@ async function getDepartements() {
 
 async function getEtudiants() {
   try {
-    const response = await fetch("http://localhost:8090/api/etudiants", { cache: "no-store" });
+    const response = await fetch("http://etudiant-service:8081/api/etudiants", { cache: "no-store" });
     if (!response.ok) return [];
     return response.json();
   } catch {

@@ -1,0 +1,9 @@
+**/node_modules
+**/target
+**/.next
+**/build
+**/.git
+**/.idea
+**/.vscode
+*.log
+docker-compose.override.yml

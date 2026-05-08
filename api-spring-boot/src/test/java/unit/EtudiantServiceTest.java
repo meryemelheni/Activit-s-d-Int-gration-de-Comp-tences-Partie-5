@@ -28,6 +28,9 @@ class EtudiantServiceTest {
     @Mock
     private EtudiantMapper mapper;
 
+    @Mock
+    private com.example.etudiants.kafka.KafkaProducerService kafkaProducerService;
+
     @InjectMocks
     private EtudiantService service;
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Departement {
   id: number;
@@ -135,7 +136,12 @@ export default function DepartementForm() {
                       className="px-2 py-1 border border-violet-300 rounded outline-none"
                     />
                   ) : (
-                    d.nom
+                    <Link 
+                      href={`/departements/${d.id}`}
+                      className="font-medium text-slate-700 hover:text-violet-600 transition-colors"
+                    >
+                      {d.nom}
+                    </Link>
                   )}
                 </td>
                 <td className="px-6 py-4 text-right space-x-2">

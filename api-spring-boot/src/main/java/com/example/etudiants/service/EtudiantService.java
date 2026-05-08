@@ -3,6 +3,7 @@ package com.example.etudiants.service;
 import com.example.etudiants.dto.EtudiantDTO;
 import com.example.etudiants.entity.Etudiant;
 import com.example.etudiants.exception.ResourceNotFoundException;
+import com.example.etudiants.kafka.KafkaProducerService;
 import com.example.etudiants.mapper.EtudiantMapper;
 import com.example.etudiants.repository.EtudiantRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class EtudiantService {
 
     private final EtudiantRepository repository;
     private final EtudiantMapper mapper;
+    private final KafkaProducerService kafkaProducerService;
 
     // ✅ Cache Redis activé pour tous les étudiants
     @Cacheable(value = "etudiants")
@@ -40,7 +42,9 @@ public class EtudiantService {
     @CacheEvict(value = "etudiants", allEntries = true)
     public EtudiantDTO save(EtudiantDTO dto) {
         Etudiant entity = mapper.toEntity(dto);
-        return mapper.toDTO(repository.save(entity));
+        EtudiantDTO savedDto = mapper.toDTO(repository.save(entity));
+        kafkaProducerService.publishEtudiantCreated(savedDto);
+        return savedDto;
     }
 
     // ✅ Invalidation du cache après mise à jour
