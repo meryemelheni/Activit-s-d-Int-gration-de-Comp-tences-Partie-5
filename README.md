@@ -1,27 +1,24 @@
-# Projet Gestion des Étudiants — Partie 4
+# Projet Gestion des Étudiants — Partie 5
 
 ## Objectif Général
-Atteindre un niveau de qualité logicielle professionnel sur le micro-service étudiant en mettant en place une stratégie de test complète, en liant l'outillage de test à la traçabilité Jira via Xray, et en ajoutant un micro-service d'authentification.
+Introduire deux piliers fondamentaux des architectures micro-services modernes : la communication asynchrone via **Apache Kafka**, et l'observabilité de la plateforme via la **stack ELK** (Elasticsearch, Logstash, Kibana), le monitoring (**Prometheus & Grafana**) et les **health checks**.
 
-## Architecture Microservices (Mis à jour Partie 4)
-- **auth-service** : Micro-service Node.js/Express pour l'authentification (port 3001)
-- **api-spring-boot** : Service de gestion des étudiants avec stratégie de test complète (port 8081)
-- **frontend** : Interface Next.js avec tests E2E Cypress (port 3000)
-- **mongodb** : Base de données pour le service d'authentification
-- **postgres-etudiants** : Base de données pour le service étudiant
+## Architecture Microservices (Mis à jour Partie 5)
+- **auth-service** : Micro-service Node.js pour l'authentification (port 3001)
+- **api-spring-boot** : Service de gestion des étudiants (port 8081)
+- **grading-service** : Service de gestion des notes (port 8082)
+- **notification-service** : Consommateur Kafka pour les notifications (port 8083)
+- **frontend** : Interface Next.js (port 3000)
 - **eureka-server** : Annuaire des services (port 8761)
 - **api-gateway** : Point d'entrée unique (port 8090)
+- **Bases de données** : PostgreSQL (étudiants), MongoDB (auth), Redis (cache)
+- **Broker** : Apache Kafka + Zookeeper
 
-## Stratégie de Test (Couverture ≥ 80%)
-- **Tests Unitaires** : JUnit 5 + Mockito (Isolation complète de la couche Service).
-- **Tests d'Intégration** : Testcontainers + PostgreSQL (Validation de la couche DAO).
-- **Tests E2E** : Cypress (Scénarios utilisateurs complets sur le Frontend).
-- **Tests de Stress** : Gatling (Validation des performances sous charge).
-- **Mesure de Couverture** : JaCoCo (Échec du build si < 80%).
-
-## Intégration Jira & Xray
-- **GitHub ↔ Jira** : Liens automatiques via les clés de tickets (ex: `PROJ-4`).
-- **Xray** : Publication automatique des résultats de tests JUnit vers Jira via l'API REST dans le pipeline CI/CD.
+## Observabilité & Monitoring
+- **Logs centralisés (ELK)** : Les logs sont envoyés à Logstash, indexés dans Elasticsearch et visualisables dans Kibana (port 5601).
+- **Métriques (Prometheus)** : Collecte les données de performance via Spring Actuator (port 9090).
+- **Dashboards (Grafana)** : Visualisation interactive des métriques (port 3002).
+- **Health Checks** : Monitoring de l'état de santé des services via Docker Compose.
 
 ## Lancer le projet
 ```bash
@@ -31,38 +28,22 @@ docker compose up --build
 ## URLs importantes
 | Service | URL |
 |---------|-----|
+| Frontend Web | http://localhost:3000 |
 | Eureka Dashboard | http://localhost:8761 |
-| Etudiant Swagger | http://localhost:8081/swagger-ui/index.html |
 | API Gateway | http://localhost:8090 |
-| Frontend | http://localhost:3000 |
-| Auth Service | http://localhost:3001 |
+| Kibana (Logs) | http://localhost:5601 |
+| Grafana (Metrics) | http://localhost:3002 |
+| Prometheus | http://localhost:9090 |
+| Etudiant Swagger | http://localhost:8081/swagger-ui/index.html |
 
-## Structure du dépôt attendue (Partie 4)
+## Structure du dépôt (Partie 5)
 ```text
-/projet-etudiants/
-├── api-spring-boot/
-│   ├── src/
-│   │   ├── main/
-│   │   └── test/
-│   │       ├── java/
-│   │       │   ├── unit/        # Tests unitaires JUnit + Mockito
-│   │       │   └── integration/ # Tests d'intégration Testcontainers
-│   │       └── resources/
-│   │           └── features/    # Fichiers Gherkin (Partie 2)
-│   └── pom.xml                  # Avec JaCoCo + Testcontainers + Gatling
-├── auth-service/                # Micro service Node.js (nouveau)
-│   ├── src/
-│   │   ├── models/User.js
-│   │   ├── routes/auth.js
-│   │   └── app.js
-│   └── package.json
-├── frontend/
-│   └── cypress/
-│       └── e2e/                 # Tests E2E Cypress (nouveau)
-├── .github/
-│   ├── workflows/
-│   │   └── test-and-report.yml  # Pipeline CI avec publication Xray
-│   ├── ISSUE_TEMPLATE/
-│   └── pull_request_template.md
-└── docker-compose.yml           # Mis à jour avec mongodb + auth-service
+/etudiantsapi/
+├── api-spring-boot/      # Producteur Kafka (étudiants)
+├── grading-service/      # Producteur Kafka (notes)
+├── notification-service/ # Consommateur Kafka
+├── auth-service/         # Authentification Node.js
+├── frontend/             # Next.js
+├── observability/        # Config Logstash & Prometheus
+└── docker-compose.yml    # Orchestration complète
 ```
